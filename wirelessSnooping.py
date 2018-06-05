@@ -5,6 +5,7 @@ Created on Fri May 25 19:58:13 2018
 @author: brent
 """
 import pandas as pd
+import numpy as np
 
 pd.set_option('display.max_rows',None)
 pd.set_option('display.max_columns', None)
@@ -24,7 +25,10 @@ def preprocess(data):
     data = data[data.Destination != 'ff:ff:ff:ff:ff:ff']
     #removes peripherals?
     data = data[data.Length != 63]
+    #removes all source data that isnt the length of a mac address
+    data = data[data['Source'].map(len) == 17]
     #removes cisco equipment
+    data = data[~data.Source.str.startswith("2c:5a:0f")]
     data = data[~data.Source.str.startswith("7c:95:f3")]
     data = data[~data.Source.str.startswith("74:26:ac")]
     data = data[~data.Source.str.startswith("f4:1f:c2")]
@@ -54,6 +58,11 @@ def preprocess(data):
     data = data[~data.Source.str.startswith("08:cc:68")]
     data = data[~data.Source.str.startswith("18:80:90")]
     data = data[~data.Source.str.startswith("f0:29:29")]
+    data = data[~data.Source.str.startswith("2c:5a:0f")]
+    #removes netgear equipment
+    data = data[~data.Source.str.startswith("10:da:43")]
+    data = data[~data.Source.str.startswith("10:da:43")]
+    data = data[~data.Source.str.startswith("28:c6:8e")]
     #removes arris equipment
     data = data[~data.Source.str.startswith("9c:34:26")]
     #removes atheros equipment
@@ -68,9 +77,14 @@ def preprocess(data):
     data = data[~data.Source.str.startswith("68:ec:c5")]
     data = data[~data.Source.str.startswith("88:b1:11")]
     data = data[~data.Source.str.startswith("d4:25:8b")]
+    data = data[~data.Source.str.startswith("00:50:f1")]
+    data = data[~data.Source.str.startswith("9c:da:3e")]
+    data = data[~data.Source.str.startswith("34:e6:ad")]
     #eliminates most xerox mac addresses
     data = data[~data.Source.str.startswith('00:00')]
     data = data[~data.Source.str.startswith('08:00')]
+    #removes murata equipment
+    data = data[~data.Source.str.startswith("44:91:60")]
     return data
     
 
@@ -79,7 +93,7 @@ def before_and_after(data):
     data = preprocess(data)
     print("After preprocessing:",len(data))
     print("")
-    data = data.sort_values(by=['Length','Source'])
+    data = data.sort_values(by=['Destination','Length'])
     data = data.reset_index()
     data = data.drop('index',axis=1)
     return data
@@ -109,13 +123,13 @@ def printAll(user):
     printUser(user,fab3)
     printUser(user,lib1)
     printUser(user,lib2)
-    #printUser(user,lib3)
+    printUser(user,lib3)
     printUser(user,ut1)
     printUser(user,ut2)
-    #printUser(user,ut3)
+    printUser(user,ut3)
     printUser(user,smu1)
-    #printUser(user,smu2)
-    #printUser(user,smu3)
+    printUser(user,smu2)
+    printUser(user,smu3)
     
 
 if __name__ == "__main__":  
@@ -125,13 +139,13 @@ if __name__ == "__main__":
     fab3 = pd.read_csv("FAB_46_060218_1155_1255.csv")
     lib1 = pd.read_csv("LIB_052918_830_930.csv")
     lib2 = pd.read_csv("LIB_053118_830_930.csv")
-    #lib3 = pd.read_csv("")
+    lib3 = pd.read_csv("LIB_060418_830_930.csv")
     ut1 = pd.read_csv("UT_052918_958_1058.csv")
     ut2 = pd.read_csv("UT_053118_958_1058.csv")
-    #ut3 = pd.read_csv("")
+    ut3 = pd.read_csv("UT_060418_958_1058.csv")
     smu1 = pd.read_csv("SMU_052418_150_250.csv")
-    #smu2 = pd.read_csv("")
-    #smu3 = pd.read_csv("")
+    smu2 = pd.read_csv("SMU_060218_151_251.csv")
+    smu3 = pd.read_csv("SMU_060318_150_250.csv")
 
     #initilize user population arrays for each location
     fabPop = []
@@ -159,9 +173,9 @@ if __name__ == "__main__":
     print("Library on 5/29/2018 from 0830-0930")
     lib2 = before_and_after(lib2)
     libPop.append(len(lib2))
-    #print("Library on 5/29/2018 from 0830-0930")
-    #lib3 = before_and_after(lib3)
-    #libPop.append(len(lib3))
+    print("Library on 6/4/2018 from 0830-0930")
+    lib3 = before_and_after(lib3)
+    libPop.append(len(lib3))
     #print average # users at Lib
     print("Average Users at Lib:",sum(libPop)/len(libPop),'\n')
     
@@ -172,9 +186,9 @@ if __name__ == "__main__":
     print("UT on 5/31/2018 from 0958-1058")
     ut2 = before_and_after(ut2)
     utPop.append(len(ut2))
-    #print("UT on 5/31/2018 from 0958-1058")
-    #ut3 = before_and_after(ut3)
-    #utPop.append(len(ut3))
+    print("UT on 6/4/2018 from 0958-1058")
+    ut3 = before_and_after(ut3)
+    utPop.append(len(ut3))
     #print average # users at UT
     print("Average Users at UT:",sum(utPop)/len(utPop),'\n')
     
@@ -182,14 +196,17 @@ if __name__ == "__main__":
     print("SMU on 5/24/2018 from 1350-1450")
     smu1 = before_and_after(smu1)
     smuPop.append(len(smu1))
-    #print("SMU on 5/24/2018 from 1350-1450")
-    #smu2 = before_and_after(smu2)
-    #smuPop.append(len(smu2))
-    #print("SMU on 5/24/2018 from 1350-1450")
-    #smu3 = before_and_after(smu3)
-    #smuPop.append(len(smu3))
+    print("SMU on 6/2/2018 from 1350-1450")
+    smu2 = before_and_after(smu2)
+    smuPop.append(len(smu2))
+    print("SMU on 6/3/2018 from 1350-1450")
+    smu3 = before_and_after(smu3)
+    smuPop.append(len(smu3))
     #print average # users at SMU
     print("Average Users at SMU:",sum(smuPop)/len(smuPop),'\n')
+    
+    ut2.to_html("ut2.html")
+    ut3.to_html("ut3.html")
     
     #commented out histogram print
     '''
@@ -211,8 +228,9 @@ if __name__ == "__main__":
                 dataRate6,dataRate7,dataRate8,dataRate9,dataRate10,dataRate11,
                 dataRate12)).tolist()
     histogram = pd.DataFrame(dataRates) #convert to pandas dataframe
-    pd.DataFrame.hist(histogram,bins=40) #plot histogram'''
+    pd.DataFrame.hist(histogram,bins=40) #plot histogram
     
+    '''
     #create arrays of source users from each collection
     users1 = fab1["Source"]
     users2 = fab2["Source"]
@@ -254,6 +272,7 @@ if __name__ == "__main__":
     #if find(users1,users12,match):
     #    print("User from fab found at SMU")
     
+    '''
     #search for user matches at all collections for collection 2
     if find(users2,users3,match):
         print("User from FAB found at FAB")
@@ -384,7 +403,7 @@ if __name__ == "__main__":
 
     #search for user matches at all collections for collection 11
     #if find(users11,users12,match):
-    #    print("User from fab found at SMU") 
+    #    print("User from fab found at SMU")
     
     for datum in match:
-        printAll(datum)
+        printAll(datum)'''
