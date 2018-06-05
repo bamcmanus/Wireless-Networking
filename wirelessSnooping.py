@@ -89,11 +89,11 @@ def preprocess(data):
     
 
 def before_and_after(data):
-    print("Before preprocessing:",len(data))
+    #print("Before preprocessing:",len(data))
     data = preprocess(data)
-    print("After preprocessing:",len(data))
-    print("")
-    data = data.sort_values(by=['Destination','Length'])
+    #print("After preprocessing:",len(data))
+    #print("")
+    data = data.sort_values(by=['Source','Time'])
     data = data.reset_index()
     data = data.drop('index',axis=1)
     return data
@@ -154,52 +154,52 @@ if __name__ == "__main__":
     libPop = []
 
     #preprocess fab data and collect number of users in a population array
-    print("Fab on 5/24/2018 from 1155-1255")
+    #print("Fab on 5/24/2018 from 1155-1255")
     fab1 = before_and_after(fab1)
     fabPop.append(len(fab1))
-    print("Fab on 5/29/2018 from 1155-1255")
+    #print("Fab on 5/29/2018 from 1155-1255")
     fab2 = before_and_after(fab2)
     fabPop.append(len(fab2))
-    print("Fab on 6/2/2018 from 1155-1255")
+    #print("Fab on 6/2/2018 from 1155-1255")
     fab3 = before_and_after(fab3)
     fabPop.append(len(fab3))
     #print average # users at FAB
     print("Average Users at FAB:",sum(fabPop)/len(fabPop),'\n')
     
     #preprocess Lib data and collect number of users in a population array
-    print("Library on 5/29/2018 from 0830-0930")
+    #print("Library on 5/29/2018 from 0830-0930")
     lib1 = before_and_after(lib1)
     libPop.append(len(lib1))
-    print("Library on 5/29/2018 from 0830-0930")
+    #print("Library on 5/29/2018 from 0830-0930")
     lib2 = before_and_after(lib2)
     libPop.append(len(lib2))
-    print("Library on 6/4/2018 from 0830-0930")
+    #print("Library on 6/4/2018 from 0830-0930")
     lib3 = before_and_after(lib3)
     libPop.append(len(lib3))
     #print average # users at Lib
     print("Average Users at Lib:",sum(libPop)/len(libPop),'\n')
     
     #preprocess UT data and collect number of users in a population array
-    print("UT on 5/29/2018 from 0958-1058")
+    #print("UT on 5/29/2018 from 0958-1058")
     ut1 = before_and_after(ut1)
     utPop.append(len(ut1))
-    print("UT on 5/31/2018 from 0958-1058")
+    #print("UT on 5/31/2018 from 0958-1058")
     ut2 = before_and_after(ut2)
     utPop.append(len(ut2))
-    print("UT on 6/4/2018 from 0958-1058")
+    #print("UT on 6/4/2018 from 0958-1058")
     ut3 = before_and_after(ut3)
     utPop.append(len(ut3))
     #print average # users at UT
     print("Average Users at UT:",sum(utPop)/len(utPop),'\n')
     
     #preprocess SMU data and collect number of users in a population array
-    print("SMU on 5/24/2018 from 1350-1450")
+    #print("SMU on 5/24/2018 from 1350-1450")
     smu1 = before_and_after(smu1)
     smuPop.append(len(smu1))
-    print("SMU on 6/2/2018 from 1350-1450")
+    #print("SMU on 6/2/2018 from 1350-1450")
     smu2 = before_and_after(smu2)
     smuPop.append(len(smu2))
-    print("SMU on 6/3/2018 from 1350-1450")
+    #print("SMU on 6/3/2018 from 1350-1450")
     smu3 = before_and_after(smu3)
     smuPop.append(len(smu3))
     #print average # users at SMU
@@ -208,8 +208,6 @@ if __name__ == "__main__":
     ut2.to_html("ut2.html")
     ut3.to_html("ut3.html")
     
-    #commented out histogram print
-    '''
     #collect all the data rates for each sample
     dataRate1 = fab1['DataRate'].values
     dataRate2 = fab2['DataRate'].values
@@ -229,181 +227,33 @@ if __name__ == "__main__":
                 dataRate12)).tolist()
     histogram = pd.DataFrame(dataRates) #convert to pandas dataframe
     pd.DataFrame.hist(histogram,bins=40) #plot histogram
-    
-    '''
-    #create arrays of source users from each collection
-    users1 = fab1["Source"]
-    users2 = fab2["Source"]
-    users3 = fab3["Source"]
-    users4 = lib1["Source"]
-    users5 = lib2["Source"]
-    #users6 = lib3["Source"]
-    users7 = ut1["Source"]
-    users8 = ut2["Source"]
-    #users9 = ut3["Source"]
-    users10 = smu1["Source"]
-    #users11 = smu2["Source"]
-    #users12 = smu3["Source"]
-    
-    #inialize an array for users in multiple collections
-    match = []
-    
-    #search for user matches at all collections for collection 1
-    if find(users1,users2,match):
-        print("User from FAB found at FAB")
-    if find(users1,users3,match):
-        print("User from FAB found at FAB")
-    if find(users1,users4,match):
-        print("User from FAB found at LIB")
-    if find(users1,users5,match):
-        print("User from FAB found at LIB")
-    #if find(users1,users6,match):
-    #    print("User from FAB found at LIB")
-    if find(users1,users7,match):
-        print("User from FAB found at UT")
-    if find(users1,users8,match):
-        print("User from FAB found at UT")
-    #if find(users1,users9,match):
-    #    print("User from FAB found at UT")
-    if find(users1,users10,match):
-        print("User from fab found at SMU")
-    #if find(users1,users11,match):
-    #    print("User from fab found at SMU")
-    #if find(users1,users12,match):
-    #    print("User from fab found at SMU")
-    
-    '''
-    #search for user matches at all collections for collection 2
-    if find(users2,users3,match):
-        print("User from FAB found at FAB")
-    if find(users2,users4,match):
-        print("User from FAB found at LIB")
-    if find(users2,users5,match):
-        print("User from FAB found at LIB")
-    #if find(users2,users6,match):
-    #    print("User from FAB found at LIB")
-    if find(users2,users7,match):
-        print("User from FAB found at UT")
-    if find(users2,users8,match):
-        print("User from FAB found at UT")
-    #if find(users2,users9,match):
-    #    print("User from FAB found at UT")
-    if find(users2,users10,match):
-        print("User from FAB found at SMU")
-    #if find(users2,users11,match):
-    #    print("User from FAB found at SMU")
-    #if find(users2,users12,match):
-    #    print("User from FAB found at SMU")
-    
-    #search for user matches at all collections for collection 3  
-    if find(users3,users4,match):
-        print("User from FAB found at LIB")
-    if find(users3,users5,match):
-        print("User from FAB found at LIB")
-    #if find(users3,users6,match):
-    #    print("User from FAB found at LIB")
-    if find(users3,users7,match):
-        print("User from FAB found at UT")
-    if find(users3,users8,match):
-        print("User from FAB found at UT")
-    #if find(users3,users9,match):
-    #    print("User from FAB found at UT")
-    if find(users3,users10,match):
-        print("User from FAB found at SMU")
-    #if find(users3,users11,match):
-    #    print("User from FAB found at SMU")
-    #if find(users3,users12,match):
-    #    print("User from FAB found at SMU")
-    
-    #search for user matches at all collections for collection 4
-    if find(users4,users5,match):
-        print("User from LIB found at LIB")
-    #if find(users4,users6,match):
-    #    print("User from LIB found at LIB")
-    if find(users4,users7,match):
-        print("User from LIB found at UT")
-    if find(users4,users8,match):
-        print("User from LIB found at UT")
-    #if find(users4,users9,match):
-    #    print("User from LIB found at UT")
-    if find(users4,users10,match):
-        print("User from LIB found at SMU")
-    #if find(users4,users11,match):
-    #    print("User from LIB found at SMU")
-    #if find(users4,users12,match):
-    #    print("User from LIB found at SMU")
 
-        
-    #search for user matches at all collections for collection 5
-    #if find(users5,users6,match):
-    #    print("User from LIB found at LIB")
-    if find(users5,users7,match):
-        print("User from LIB found at UT")
-    if find(users5,users8,match):
-        print("User from LIB found at UT")
-    #if find(users5,users9,match):
-    #    print("User from LIB found at UT")
-    if find(users5,users10,match):
-        print("User from LIB found at SMU")
-    #if find(users5,users11,match):
-    #    print("User from LIB found at SMU")
-    #if find(users5,users12,match):
-    #    print("User from LIB found at SMU")
-   
-    #search for user matches at all collections for collection 6    
-    #if find(users6,users7,match):
-    #    print("User from LIB found at UT")
-    #if find(users6,users8,match):
-    #    print("User from LIB found at UT")
-    #if find(users6,users9,match):
-    #    print("User from LIB found at UT")
-    #if find(users6,users10,match):
-    #    print("User from LIB found at SMU")
-    #if find(users6,users11,match):
-    #    print("User from LIB found at SMU")
-    #if find(users6,users12,match):
-    #    print("User from LIB found at SMU")
-        
-    #search for user matches at all collections for collection 7
-    if find(users7,users8,match):
-        print("User from UT found at UT")
-    #if find(users7,users9,match):
-    #    print("User from UT found at UT")
-    if find(users7,users10,match):
-        print("User from UT found at SMU")
-    #if find(users7,users11,match):
-    #    print("User from UT found at SMU")
-    #if find(users7,users12,match):
-    #    print("User from UT found at SMU")
+    print("User from LIB on 5/29 at UT on 5/31")    
+    printUser("24:00:aa:aa:03:00",lib1)
+    printUser("24:00:aa:aa:03:00",ut2)
+    print('\n','\n')
     
-    #search for user matches at all collections for collection 8
-    #if find(users8,users9,match):
-    #    print("User from UT found at UT")
-    if find(users8,users10,match):
-        print("User from UT found at SMU")
-    #if find(users8,users11,match):
-    #    print("User from UT found at SMU")
-    #if find(users8,users12,match):
-    #    print("User from UT found at SMU")    
+    print("User from LIB on 5/31 at LIB on 6/4")
+    printUser("9c:50:57:d4:24:02",lib2)
+    printUser("9c:50:57:d4:24:02",lib3)
+    print('\n','\n')
     
-    #search for user matches at all collections for collection 9
-    #if find(users9,users10,match):
-    #    print("User from UT found at SMU")
-    #if find(users9,users11,match):
-    #    print("User from UT found at SMU")
-    #if find(users9,users12,match):
-    #    print("User from UT found at SMU")     
- 
-##adjust to all SMU    
-    #search for user matches at all collections for collection 10
-    #if find(users10,users11,match):
-    #    print("User from fab found at SMU")
-    #if find(users10,users12,match):
-    #    print("User from fab found at SMU")     
-
-    #search for user matches at all collections for collection 11
-    #if find(users11,users12,match):
-    #    print("User from fab found at SMU")
+    print("User from UT on 5/29 at UT on 5/31 and 6/4")
+    printUser("01:00:aa:aa:03:00",ut1)
+    printUser("01:00:aa:aa:03:00",ut2)
+    printUser("01:00:aa:aa:03:00",ut3)
+    print('\n','\n')
     
-    for datum in match:
-        printAll(datum)'''
+    print("User from UT on 5/29 at UT on 6/4")
+    printUser("14:4e:00:00:14:4e",ut1)
+    printUser("14:4e:00:00:14:4e",ut3)
+    print('\n','\n')
+    
+    print("User from UT on 5/31 at SMU on 6/2")
+    printUser("03:00:aa:aa:03:00",ut2)
+    printUser("03:00:aa:aa:03:00",smu2)
+    print('\n','\n')
+    
+    print("User from SMU on 6/2 at SMU on 6/3")
+    printUser("e4:00:00:da:c6:b2",smu2)
+    printUser("e4:00:00:da:c6:b2",smu3)
